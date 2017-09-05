@@ -7,8 +7,6 @@ package workshop2.interfacelayer.controller;
 
 import workshop2.domain.Product;
 import workshop2.interfacelayer.dao.DuplicateProductException;
-import workshop2.interfacelayer.dao.DaoFactory;
-import workshop2.interfacelayer.dao.ProductDao;
 import workshop2.interfacelayer.view.ProductView;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -18,7 +16,8 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import workshop2.interfacelayer.DatabaseConnection;
-import workshop2.interfacelayer.persistencelayer.PersistenceService;
+import workshop2.interfacelayer.persistencelayer.ProductService;
+import workshop2.interfacelayer.persistencelayer.ProductServiceFactory;
 
 /**
  *
@@ -29,13 +28,11 @@ public class ProductController {
     private static final Logger log = LoggerFactory.getLogger(ProductController.class);
     private final ProductView productView;
     private Product product;
-    private PersistenceService productDao;
-    private EntityManager entityManager;
+    private final ProductService productService = ProductServiceFactory.getAddressService();
 
     public ProductController(ProductView productView) {
         this.productView = productView;
-        entityManager = DatabaseConnection.getInstance().getEntityManager();
-        productDao = new PersistenceService();
+
     }
 
     public void createProduct() {
@@ -51,7 +48,7 @@ public class ProductController {
         if (confirmed == null || confirmed == 2) {
             return;
         } else {
-            productDao.createObject(product);
+            productService.createProduct(product);
         }
     }
 
@@ -73,7 +70,7 @@ public class ProductController {
         if (confirmed == null || confirmed == 2) {
             return;
         } else {
-            productDao.deleteObject(product);
+            productService.deleteProduct(product);
         }
     }
 
@@ -99,7 +96,7 @@ public class ProductController {
         if (confirmed == null || confirmed == 2) {
             return;
         } else {
-            productDao.updateObject(productAfterUpdate);
+            productService.updateProduct(productAfterUpdate);
         }
     }
 
@@ -110,9 +107,8 @@ public class ProductController {
     //returntype the list of products, required for verification of which product to delete
     public List<Product> listAllProducts() {
         List<Product> productList;
-        entityManager = DatabaseConnection.getInstance().getEntityManager();
-        productDao = new PersistenceService();
-        productList = productDao.getAllProductsAsList();
+
+        productList = productService.getAllProductsAsList();
 
         productView.showListOfAllProducts(productList);
 

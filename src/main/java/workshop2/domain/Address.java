@@ -24,14 +24,13 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "ADDRESS")
-/*@SecondaryTable(name = "ADDRESS_TYPE")*/
 public class Address {
 
     public Address(int id, String newStreetName, Integer newNumber, String newAddition, String newPostalCode, String newCity, Customer customer, Type addressType) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     public enum Type {
-        HUIS, WERK
+        POSTADRES, FACTUURADRES, BEZORGADRES
     }
             
     @Id
@@ -50,9 +49,6 @@ public class Address {
     private String city;
     @OneToOne
     private Customer customer;
-   /* @Column(name = "ADDRESSTYPEID", table = "ADDRESS_TYPE")
-    private int addressTypeId;
-    @Column(name = "TYPE", table = "ADDRESS_TYPE")*/
     @Enumerated(EnumType.ORDINAL)
     private Type addressType;
     
@@ -61,7 +57,7 @@ public class Address {
     }
 
     public Address(String streetName, int number, String addition, String postalCode, 
-            String city, Customer customer, Type addressType/*int addressTypeId*/) {
+            String city, Customer customer, Type addressType) {
         this.streetName = streetName;
         this.number = number;
         this.addition = addition;

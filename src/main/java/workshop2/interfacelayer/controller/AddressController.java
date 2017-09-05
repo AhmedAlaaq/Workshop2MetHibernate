@@ -11,14 +11,12 @@ import javax.persistence.EntityManager;
 import static org.hibernate.internal.util.collections.CollectionHelper.arrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import workshop2.domain.Account;
 import workshop2.domain.Address;
 import workshop2.interfacelayer.DatabaseConnection;
-import workshop2.interfacelayer.dao.AddressDao;
 import workshop2.interfacelayer.dao.DaoFactory;
+import workshop2.interfacelayer.persistencelayer.AddressService;
+import workshop2.interfacelayer.persistencelayer.AddressServiceFactory;
 import workshop2.interfacelayer.persistencelayer.GenericDaoImpl;
-import workshop2.interfacelayer.persistencelayer.PersistenceService;
-import workshop2.interfacelayer.view.AccountView;
 import workshop2.interfacelayer.view.AddressView;
 
 /**
@@ -29,25 +27,16 @@ public class AddressController {
     private static final Logger log = LoggerFactory.getLogger(AddressController.class);
     private final AddressView addressView;
     private Address address;
-    private final PersistenceService addressDao;
-    private EntityManager entityManager;
+    private final AddressService addressService = AddressServiceFactory.getAddressService();
+  
     
     public AddressController(AddressView addressView) {       
         
           this.addressView = addressView;
 
-        entityManager = DatabaseConnection.getInstance().getEntityManager();
-
-        addressDao = new PersistenceService();
+       
     }
     
-    AddressController(AddressView addressView, PersistenceService addressDao) {
-
-        this.addressView = addressView;
-
-        this.addressDao = addressDao;
-
-    }
     
     public void createAddress(CustomerController customerController) {        
         // We first need a valid customer to link to the new address
@@ -72,7 +61,7 @@ public class AddressController {
                     return;
                 }
             }
-            addressDao.createObject(optionalAddress.get());
+            addressService.createAddress(optionalAddress.get());
         }       
     }
     
@@ -87,7 +76,7 @@ public class AddressController {
         List<Address> listAddresses = listAllAddressesFromCustomer(customerId);
         Optional<Address> optionalAddress = addressView.selectAddressToDelete(listAddresses);
         if (optionalAddress.isPresent()) {
-            addressDao.deleteObject(optionalAddress.get());
+            addressService.deleteAddress(optionalAddress.get());
         }            
     }
     
@@ -102,7 +91,7 @@ public class AddressController {
         List<Address> listAddresses = listAllAddressesFromCustomer(customerId);
         Optional<Address> optionalAddress = addressView.selectAddressToUpdate(listAddresses);
         if (optionalAddress.isPresent()) {
-            addressDao.updateObject(optionalAddress.get());
+            addressService.updateAddress(optionalAddress.get());
         }            
         
     }
@@ -111,15 +100,16 @@ public class AddressController {
     
     List<Address> listAllAddressesFromCustomer(int customerId) {
 
-        return addressDao.findAllAddressByCustomerId(customerId);
+        return addressService.findAllAddressByCustomerId(customerId);
         
                
     }
     
     List<String> getAvailableAddressTypes() {
         List<String> addressType = null;
-        addressType.add("HUIS");
-        addressType.add("WERK");
+        addressType.add("POSTADRES");
+        addressType.add("FACTUURADRES");
+        addressType.add("BEZORGADRES");
         
         return addressType;
     }

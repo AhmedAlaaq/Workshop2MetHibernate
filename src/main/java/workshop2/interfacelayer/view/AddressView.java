@@ -61,11 +61,15 @@ public class AddressView {
         if (city == null) return Optional.empty();  // User interupted createAddress proces
         Integer addressTypeId = requestAddressType(addressTypes);
         Type addressType = null;
-        if (addressTypeId == 0){
-           address.setType(Type.HUIS);
+        if (addressTypeId == 1){
+           address.setType(Type.POSTADRES);
         addressType = address.getAddressType();}
-        else if (addressTypeId == 1){
-            address.setType(Type.WERK);
+        else if (addressTypeId == 2){
+            address.setType(Type.FACTUURADRES);
+            addressType = address.getAddressType();
+        }
+          else if (addressTypeId == 3){
+            address.setType(Type.BEZORGADRES);
             addressType = address.getAddressType();
         }
         if (addressType == null) return Optional.empty();  // User interupted createAccount proces

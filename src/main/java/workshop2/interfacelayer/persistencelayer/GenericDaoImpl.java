@@ -18,35 +18,24 @@ import workshop2.domain.Account;
  *
  * @author Ahmed-Al-Alaaq(Egelantier)
  */
-public class GenericDaoImpl<T>  {
+public class GenericDaoImpl<T> {
 
     @PersistenceContext
     protected EntityManager em;
     protected Class<T> entityClass;
-
-    public GenericDaoImpl(Class<T> entityClass) {
-        this.entityClass = entityClass;
-    }
-
-    public GenericDaoImpl(EntityManager em) {
-        this.em = em;
-
-    }
 
     public GenericDaoImpl(Class<T> entityClass, EntityManager em) {
         this.entityClass = entityClass;
         this.em = em;
     }
 
-    
-
     public void persistent(T object) {
 
         em.persist(object);
     }
 
-    public T findById(long id) {
-        return em.find(entityClass, id);
+    public Optional<T> findById(long id) {
+        return Optional.ofNullable(em.find(entityClass, id));
     }
 
     public List<T> findAll(Class<T> entityClass) {
@@ -66,24 +55,6 @@ public class GenericDaoImpl<T>  {
 
         em.remove(object);
 
-    }
-
-    public Object findAddressByCustomerId(int id, String sql) {
-        Query query = em.createNamedQuery(sql);
-        query.setParameter("id", id);
-        return query.getSingleResult();
-    }
-
-    public List<Object> findAllAddressByCustomerId(int id, String sql) {
-        Query query = em.createNamedQuery(sql);
-        query.setParameter("id", id);
-        return query.getResultList();
-    }
-
-    public List<Object> findAllProducts() {
-        String sql = "Select * FROM Product ORDER BY name asc";
-        Query query = em.createNamedQuery(sql);
-        return query.getResultList();
     }
 
 }
