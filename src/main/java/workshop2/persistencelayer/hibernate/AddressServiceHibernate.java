@@ -47,8 +47,9 @@ public class AddressServiceHibernate extends GenericServiceHibernate implements 
         } catch (Exception ex) {
 
             entityManager.getTransaction().rollback();
+            ex.printStackTrace();
 
-            System.out.println("Transactie is niet uitgevoerd!");
+           // System.out.println("Transactie is niet uitgevoerd!");
 
             // Exception doorgooien of FailedTransaction oid opgooien?
         } finally {

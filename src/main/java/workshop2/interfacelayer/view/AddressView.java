@@ -41,8 +41,8 @@ public class AddressView {
         input.nextLine();
     }
     
-    public Optional<Address> constructAddress(Long customerId, List<String> addressTypes) {
-        Customer customer = null;
+    public Optional<Address> constructAddress(Customer customer, List<String> addressTypes) {
+        //Customer customer = null;
         System.out.println("Vul nu de gevraagde adresgegevens in. Let op dat u slechts één adres\n"
                 + "van elk type per klant kunt hebben. Als u een uitroepteken invult\n"
                 + "wordt het toevoegen van een nieuwe adres afgebroken en gaat u terug\n"
@@ -60,14 +60,14 @@ public class AddressView {
         if (city == null) return Optional.empty();  // User interupted createAddress proces
         Integer addressTypeId = requestAddressType(addressTypes);
         AddressType addressType = null;
-        if (addressTypeId == 0){
+        if (addressTypeId == 1){
            address.setAddressType(AddressType.POSTADRES);
         addressType = address.getAddressType();}
-        else if (addressTypeId == 1){
+        else if (addressTypeId == 2){
             address.setAddressType(AddressType.FACTUURADRES);
             addressType = address.getAddressType();
         }
-          else if (addressTypeId == 2){
+          else if (addressTypeId == 3){
             address.setAddressType(AddressType.BEZORGADRES);
             addressType = address.getAddressType();
         }
